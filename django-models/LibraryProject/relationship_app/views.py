@@ -11,8 +11,6 @@ def list_books(request):
 from django.views.generic.detail import DetailView
 from .models import Library
 
-from django.views.generic.detail import DetailView
-from .models import Library
 
 class LibraryDetailView(DetailView):
     model = Library
