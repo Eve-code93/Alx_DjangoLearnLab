@@ -58,3 +58,15 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 
 
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import render
+from django.http import HttpResponseForbidden
+from relationship_app.models import UserProfile
+
+# Check if user is an Admin
+def is_admin(user):
+    return UserProfile.objects.filter(user=user, role='Admin').exists()
+
+@user_passes_test(is_admin)
+def admin_dashboard(request):
+    return render(request, 'relationship_app/admin_dashboard.html')

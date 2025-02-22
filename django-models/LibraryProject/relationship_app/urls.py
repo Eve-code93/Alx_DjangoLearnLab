@@ -18,4 +18,10 @@ urlpatterns = [
 ]
 
 
+from django.urls import path
+from relationship_app.views import admin_view
+
+urlpatterns = [
+    path('admin-dashboard/', admin_view.admin_dashboard, name='admin_dashboard'),
+]
 
