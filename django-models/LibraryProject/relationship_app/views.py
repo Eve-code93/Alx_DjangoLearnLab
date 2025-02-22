@@ -17,37 +17,39 @@ class LibraryDetailView(DetailView):
     template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library'
 
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
-# Login View
-def user_login(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)  # Django's built-in login form
+# User Registration View
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.get_user()  # Get the authenticated user
-            login(request, user)  # Log the user in
-            return redirect('home')  # Redirect to a home page (change 'home' to your actual homepage URL name)
+            user = form.save()
+            login(request, user)  # Log in the user after registration
+            return redirect('home')  # Redirect to homepage (change as needed)
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})
+
+# User Login View
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)  # Log in the user
+            return redirect('home')  # Redirect to homepage
     else:
         form = AuthenticationForm()
     return render(request, 'login.html', {'form': form})
 
-# Logout View
-def user_logout(request):
+# User Logout View
+@login_required
+def logout_view(request):
     logout(request)
-    return render(request, 'logout.html')
-
-# Registration View
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)  # Django's built-in user registration form
-        if form.is_valid():
-            user = form.save()  # Save the new user to the database
-            login(request, user)  # Log in the new user automatically
-            return redirect('home')
-    else:
-        form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return redirect('login')  # Redirect to login page after logout
 
 

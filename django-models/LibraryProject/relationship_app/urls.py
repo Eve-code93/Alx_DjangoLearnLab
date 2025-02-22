@@ -7,11 +7,12 @@ urlpatterns = [
 ]
  
 from django.urls import path
-from .views import user_login, user_logout, register
-from django.contrib.auth.views import LogoutView  # Django's built-in logout view
+from .views import register_view, login_view, logout_view
 
 urlpatterns = [
-    path('login/', user_login, name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
-    path('register/', register, name='register'),
+    path('register/', register_view, name='register'),
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
+]
+
 ]
