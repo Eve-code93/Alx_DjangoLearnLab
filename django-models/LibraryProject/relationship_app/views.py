@@ -44,7 +44,7 @@ def login_view(request):
             return redirect('home')  # Redirect to homepage
     else:
         form = AuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 # User Logout View
 @login_required

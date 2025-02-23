@@ -7,6 +7,13 @@ urlpatterns = [
 ]
  
 from django.urls import path
+from .views import register_view
+
+urlpatterns = [
+    path("register/", register_view, name="register"),
+]
+
+from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 
