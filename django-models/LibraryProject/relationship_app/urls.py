@@ -33,3 +33,11 @@ urlpatterns = [
     path('librarian-dashboard/', librarian_view.librarian_dashboard, name='librarian_dashboard'),
     path('member-dashboard/', member_view.member_dashboard, name='member_dashboard'),
 ]
+from django.urls import path
+from .views import admin_view, librarian_view, member_view
+
+urlpatterns = [
+    path('admin-view/', admin_view, name='admin_view'),
+    path('librarian-view/', librarian_view, name='librarian_view'),
+    path('member-view/', member_view, name='member_view'),
+]
