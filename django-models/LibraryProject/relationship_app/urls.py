@@ -22,7 +22,7 @@ from django.urls import path
 from relationship_app.views import admin_view
 
 urlpatterns = [
-    path('admin-dashboard/', admin_view.admin_dashboard, name='admin_dashboard'),
+    path('admin-dashboard/', admin_view.admin, name='admin_dashboard'),
 ]
 
 from django.urls import path
@@ -41,3 +41,13 @@ urlpatterns = [
     path('librarian-view/', librarian_view, name='librarian_view'),
     path('member-view/', member_view, name='member_view'),
 ]
+from django.urls import path
+from . import admin_view  # Ensure admin_view is in the same app directory
+
+urlpatterns = [
+    path('admin-dashboard/', admin_view.admin_dashboard, name='admin_dashboard'),
+]
+def is_admin(user):
+    if user.is_authenticated and hasattr(user, 'userprofile') and user.userprofile.role == 'Admin':
+        return True
+    return redirect('login')  # Redirect unauthorized users to login page
