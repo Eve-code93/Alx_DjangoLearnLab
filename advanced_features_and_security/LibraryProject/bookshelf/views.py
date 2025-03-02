@@ -80,3 +80,16 @@ def book_edit(request, book_id):
         form = BookForm(instance=book)
     return render(request, 'bookshelf/book_form.html', {'form': form})
 
+# LibraryProject/bookshelf/views.py
+from django.shortcuts import render
+from .forms import ExampleForm
+
+def example_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Handle form data
+            return redirect('success_url')
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/example_form.html', {'form': form})
