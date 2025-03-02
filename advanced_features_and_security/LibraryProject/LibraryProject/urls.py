@@ -34,3 +34,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('books/', include('relationship_app.urls')),  # Include relationship_app URLs
 ]
+# LibraryProject/bookshelf/urls.py
+from django.urls import path
+from .views import example_view
+
+urlpatterns = [
+    path('example/', example_view, name='example_form'),
+    # Add other URL patterns here
+]

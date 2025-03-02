@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 ]
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
-MIDDLEWARE =[
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,15 +50,9 @@ MIDDLEWARE =[
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # LibraryProject/LibraryProject/settings.py
-      ...
-    'csp.middleware.CSPMiddleware',
-
-
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'", 'https://trustedscripts.example.com')
-# Add other CSP settings as needed
+     'csp.middleware.CSPMiddleware',
 ]
+
 
 
 

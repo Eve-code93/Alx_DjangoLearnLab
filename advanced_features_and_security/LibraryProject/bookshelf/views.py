@@ -79,3 +79,4 @@ def book_edit(request, book_id):
     else:
         form = BookForm(instance=book)
     return render(request, 'bookshelf/book_form.html', {'form': form})
+
