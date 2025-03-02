@@ -85,11 +85,14 @@ from django.shortcuts import render
 from .forms import ExampleForm
 
 def example_view(request):
-    if request.method == 'POST':
-        form = ExampleForm(request.POST)
+    form = ExampleForm(request.POST or None)
+    if request.method == "POST":
         if form.is_valid():
-            # Handle form data
-            return redirect('success_url')
-    else:
-        form = ExampleForm()
-    return render(request, 'bookshelf/example_form.html', {'form': form})
+            # Process the form data safely
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            message = form.cleaned_data["message"]
+            return render(request, "bookshelf/form_example.html", {"success": True})
+    
+    return render(request, "bookshelf/form_example.html", {"form": form})
+
