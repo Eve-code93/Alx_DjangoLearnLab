@@ -23,3 +23,10 @@ urlpatterns = [
     path('books/update/<int:pk>/', UpdateView.as_view(), name='book-update'),
     path('books/delete/<int:pk>/', DeleteView.as_view(), name='book-delete'),
 ]
+
+from django.urls import path
+from .views import ListView
+
+urlpatterns = [
+    path('books/', ListView.as_view(), name='book-list'),
+]
