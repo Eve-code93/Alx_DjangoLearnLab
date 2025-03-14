@@ -1,9 +1,10 @@
 from django.shortcuts import render
 
-# Create your views here.
+from django_filters import rest_framework as filters  # ✅ Import DjangoFilterBackend properly
 from rest_framework import generics
-from .models import Author, Book
-from .serializers import AuthorSerializer, BookSerializer
+from .models import Book
+from .serializers import BookSerializer
+from .permissions import IsAdminOrReadOnly
 
 class AuthorListCreateView(generics.ListCreateAPIView):
     queryset = Author.objects.all()
