@@ -40,21 +40,26 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]  # Restrict edit/delete to admins
-    
+
+
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Book
 from .serializers import BookSerializer
-from .permissions import IsAdminOrReadOnly  # Import the custom permission
+from .permissions import IsAdminOrReadOnly  # Custom permission for admin-only actions
 
-# List all books or create a new book
-class BookListCreateView(generics.ListCreateAPIView):
+# Alias DRF views to match expected Django class-based view names
+class ListView(generics.ListCreateAPIView):  # List + Create
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]  # Read for all, write for authenticated users
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-# Retrieve a single book by ID, update, or delete
-class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
+class UpdateView(generics.UpdateAPIView):  # Update only
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAdminOrReadOnly]  # Only admin users can edit/delete books
+    permission_classes = [IsAdminOrReadOnly]
+
+class DeleteView(generics.DestroyAPIView):  # Delete only
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAdminOrReadOnly]
