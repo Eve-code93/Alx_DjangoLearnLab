@@ -1,0 +1,21 @@
+# Advanced API Project - Book API
+
+## Overview
+This API allows users to manage books using Django REST Framework (DRF).
+
+## Endpoints
+| Method | Endpoint          | Description               | Authentication |
+|--------|------------------|---------------------------|--------------|
+| GET    | /books/          | List all books            | Public |
+| POST   | /books/          | Add a new book            | Admin Only |
+| GET    | /books/<id>/     | Retrieve a book           | Public |
+| PUT    | /books/<id>/     | Update a book             | Admin Only |
+| DELETE | /books/<id>/     | Delete a book             | Admin Only |
+
+## Permissions
+- **Public:** Can read books.
+- **Authenticated Users:** Can create books.
+- **Admins:** Can edit/delete books.
+
+## Setup
+1. Install dependencies:  
