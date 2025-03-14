@@ -48,18 +48,22 @@ from .models import Book
 from .serializers import BookSerializer
 from .permissions import IsAdminOrReadOnly  # Custom permission for admin-only actions
 
-# Alias DRF views to match expected Django class-based view names
-class ListView(generics.ListCreateAPIView):  # List + Create
+class ListView(generics.ListAPIView):  
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-class UpdateView(generics.UpdateAPIView):  # Update only
+class CreateView(generics.CreateAPIView):  # Create new book
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]
 
-class DeleteView(generics.DestroyAPIView):  # Delete only
+class UpdateView(generics.UpdateAPIView):  
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class DeleteView(generics.DestroyAPIView):  
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAdminOrReadOnly]
