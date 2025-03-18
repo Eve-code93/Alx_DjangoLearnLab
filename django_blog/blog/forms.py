@@ -32,12 +32,14 @@ class CommentForm(forms.ModelForm):
 # blog/forms.py
 from django import forms
 from .models import Post
+from taggit.forms import TagWidget  # ✅ Import TagWidget
 
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Comma-separated tags'}))
-
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags']
+        fields = ["title", "content", "tags"]
+        widgets = {
+            "tags": TagWidget(),  # ✅ Use TagWidget for the 'tags' field
+        }
 
 
