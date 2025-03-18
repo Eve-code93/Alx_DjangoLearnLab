@@ -83,37 +83,16 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post, Comment
 from .forms import CommentForm
 
-# Post Detail View (including comments)
-class PostDetailView(DetailView):
-    model = Post
-    template_name = "blog/post_detail.html"
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["comments"] = self.object.comments.all()
-        context["form"] = CommentForm()
-        return context
-
-# Comment Create View
-class CommentCreateView(LoginRequiredMixin, CreateView):
+# Comment Delete View
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Comment
-    form_class = CommentForm
-    template_name = "blog/comment_form.html"
-
-    def form_valid(self, form):
-        form.instance.post = get_object_or_404(Post, pk=self.kwargs["pk"])
-        form.instance.author = self.request.user
-        messages.success(self.request, "Your comment has been posted.")
-        return super().form_valid(form)
+    template_name = "blog/comment_confirm_delete.html"
 
     def get_success_url(self):
-        return reverse_lazy("post-detail", kwargs={"pk": self.kwargs["pk"]})
+        messages.success(self.request, "Your comment has been deleted.")
+        return reverse_lazy("post-detail", kwargs={"pk": self.object.post.pk})
 
-# Comment Update View
-class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Comment
-    form_class = CommentForm
-    template_name = "blog/comment_form.html"
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author  # Only allow author to delete
 
-    def form_valid(self, form):
-        messages.success
