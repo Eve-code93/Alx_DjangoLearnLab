@@ -64,3 +64,10 @@ urlpatterns = [
     path("post/<int:pk>/delete/", PostDeleteView.as_view(), name="post-delete"),
     path("search/", SearchResultsView.as_view(), name="search-results"),
 ]
+from django.urls import path
+from .views import PostListView, PostByTagListView
+
+urlpatterns = [
+    path("", PostListView.as_view(), name="post-list"),  
+    path("tags/<slug:tag_slug>/", PostByTagListView.as_view(), name="posts-by-tag"),  # ✅ Add this line
+]
