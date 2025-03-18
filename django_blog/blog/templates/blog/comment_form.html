@@ -11,3 +11,17 @@
     <button type="submit">Save changes</button>
 </form>
 <a href="{% url 'post-detail' object.post.pk %}">Cancel</a>
+
+
+
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <h2>{% if object %}Edit{% else %}New{% endif %} Comment</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if object %}Update{% else %}Post{% endif %} Comment</button>
+    </form>
+    <a href="{% url 'post-detail' pk=object.post.pk %}">Cancel</a>
+{% endblock %}
