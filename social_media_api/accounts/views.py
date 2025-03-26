@@ -38,9 +38,6 @@ class ProfileView(generics.RetrieveUpdateAPIView):
     def get_object(self):
         return self.request.user
 
-
-
-
 CustomUser = get_user_model()
 
 class FollowUserView(generics.GenericAPIView):
@@ -64,3 +61,8 @@ class UnfollowUserView(generics.GenericAPIView):
             return Response({"message": "You have unfollowed this user."}, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
             return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class ListUsersView(generics.ListAPIView):
+    """List all users"""
+    queryset = CustomUser.objects.all()  # Ensures CustomUser.objects.all() is present
+    permission_classes = [IsAuthenticated]
