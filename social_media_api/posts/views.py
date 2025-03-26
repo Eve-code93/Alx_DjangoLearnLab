@@ -71,16 +71,16 @@ from notifications.models import Notification
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = generics.get_object_or_404(Post, pk=pk)  # Retrieve the post safely
+    post = get_object_or_404(Post, pk=pk)  # Ensure the post exists
     user = request.user
-    
-    # Ensure the user hasn't already liked the post
-    like, created = Like.objects.get_or_create(user=user, post=post)  # ✅ This was missing
+
+    # Check if the user already liked the post, prevent duplicate likes
+    like, created = Like.objects.get_or_create(user=user, post=post)  # ✅ MISSING LINE
 
     if not created:
         return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Generate a notification for the post author
+    # Create a notification for the post author
     Notification.objects.create(
         recipient=post.author,
         actor=user,
@@ -89,4 +89,3 @@ def like_post(request, pk):
     )
 
     return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
-
