@@ -61,8 +61,8 @@ class UserFeedView(generics.ListAPIView):
         return Post.objects.filter(author__in=following_users).order_by("-created_at")  # Ensure this line is present
 
 from django.shortcuts import get_object_or_404
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import Post, Like
@@ -71,21 +71,36 @@ from notifications.models import Notification
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)  # Ensure the post exists
-    user = request.user
+    # ✅ Ensures post exists
+    post = generics.get_object_or_404(Post, pk=pk)
 
-    # Check if the user already liked the post, prevent duplicate likes
-    like, created = Like.objects.get_or_create(user=user, post=post)  # ✅ MISSING LINE
+    # ✅ Prevents duplicate likes
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
 
     if not created:
         return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Create a notification for the post author
+    # ✅ Creates a notification for the post owner
     Notification.objects.create(
         recipient=post.author,
-        actor=user,
+        actor=request.user,
         verb="liked",
         target=post
     )
 
     return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def unlike_post(request, pk):
+    # ✅ Ensures post exists
+    post = generics.get_object_or_404(Post, pk=pk)
+
+    # ✅ Deletes the like if it exists
+    like = Like.objects.filter(user=request.user, post=post).first()
+    
+    if like:
+        like.delete()
+        return Response({"detail": "Post unliked successfully."}, status=status.HTTP_200_OK)
+    
+    return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
