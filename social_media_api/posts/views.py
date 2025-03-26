@@ -55,35 +55,40 @@ class UserFeedView(generics.ListAPIView):
 
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import Post, Like
+from notifications.models import Notification
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)  # Ensure post exists
+    post = generics.get_object_or_404(Post, pk=pk)  # Ensure post exists
     user = request.user
     
-    # Check if user has already liked the post
-    if Like.objects.filter(user=user, post=post).exists():
+    # Ensure user hasn't already liked the post
+    like, created = Like.objects.get_or_create(user=user, post=post)
+    if not created:
         return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
-    
-    # Create Like object
-    Like.objects.create(user=user, post=post)
 
-    # Generate a notification (assuming a function exists for this)
-    create_notification(recipient=post.author, actor=user, verb="liked", target=post)
+    # Generate a notification
+    Notification.objects.create(
+        recipient=post.author,
+        actor=user,
+        verb="liked",
+        target=post
+    )
 
     return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def unlike_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)  # Ensure post exists
+    post = generics.get_object_or_404(Post, pk=pk)  # Ensure post exists
     user = request.user
     
+    # Check if user has liked the post
     like = Like.objects.filter(user=user, post=post).first()
     if not like:
         return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
