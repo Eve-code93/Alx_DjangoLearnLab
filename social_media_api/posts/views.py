@@ -7,6 +7,13 @@ from .serializers import PostSerializer, CommentSerializer
 from rest_framework import generics, permissions
 from .models import Post
 from .serializers import PostSerializer
+from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
+from rest_framework import status, generics
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .models import Post, Like
+from notifications.models import Notification
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
@@ -64,15 +71,16 @@ from notifications.models import Notification
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def like_post(request, pk):
-    post = generics.get_object_or_404(Post, pk=pk)  # Ensure post exists
+    post = generics.get_object_or_404(Post, pk=pk)  # Retrieve the post safely
     user = request.user
     
-    # Ensure user hasn't already liked the post
-    like, created = Like.objects.get_or_create(user=user, post=post)
+    # Ensure the user hasn't already liked the post
+    like, created = Like.objects.get_or_create(user=user, post=post)  # ✅ This was missing
+
     if not created:
         return Response({"detail": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Generate a notification
+    # Generate a notification for the post author
     Notification.objects.create(
         recipient=post.author,
         actor=user,
@@ -82,16 +90,3 @@ def like_post(request, pk):
 
     return Response({"detail": "Post liked successfully."}, status=status.HTTP_201_CREATED)
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def unlike_post(request, pk):
-    post = generics.get_object_or_404(Post, pk=pk)  # Ensure post exists
-    user = request.user
-    
-    # Check if user has liked the post
-    like = Like.objects.filter(user=user, post=post).first()
-    if not like:
-        return Response({"detail": "You have not liked this post."}, status=status.HTTP_400_BAD_REQUEST)
-
-    like.delete()
-    return Response({"detail": "Post unliked successfully."}, status=status.HTTP_200_OK)
