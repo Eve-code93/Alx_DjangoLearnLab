@@ -21,3 +21,20 @@ class UserSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()  # Define field for 'username'
     password = serializers.CharField()  # Define field for 'password'
+
+from rest_framework import serializers
+from .models import CustomUser
+
+class UserSerializer(serializers.ModelSerializer):
+    followers_count = serializers.SerializerMethodField()
+    following_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'followers_count', 'following_count']
+
+    def get_followers_count(self, obj):
+        return obj.followers.count()
+
+    def get_following_count(self, obj):
+        return obj.following.count()
