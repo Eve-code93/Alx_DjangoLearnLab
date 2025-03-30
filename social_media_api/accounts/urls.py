@@ -1,17 +1,14 @@
 from django.urls import path
-from rest_framework.authtoken.views import obtain_auth_token
-from .views import UserRegistrationView, UserProfileView
+from .views import (
+    PostListView, PostDetailView, LikePostView, UnlikePostView,
+    FollowUserView, UnfollowUserView
+)
 
 urlpatterns = [
-    path('register/', UserRegistrationView.as_view(), name='register'),  # ✅ Registration
-    path('login/', obtain_auth_token, name='login'),  # ✅ Login using DRF token auth
-    path('profile/', UserProfileView.as_view(), name='profile'),  # ✅ Profile management
-]
-
-from django.urls import path
-from .views import follow_user, unfollow_user
-
-urlpatterns = [
-    path('follow/<int:user_id>/', follow_user, name='follow_user'),
-    path('unfollow/<int:user_id>/', unfollow_user, name='unfollow_user'),
+    path('posts/', PostListView.as_view(), name='post-list'),
+    path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('posts/<int:post_id>/like/', LikePostView.as_view(), name='like-post'),
+    path('posts/<int:post_id>/unlike/', UnlikePostView.as_view(), name='unlike-post'),
+    path('users/<int:user_id>/follow/', FollowUserView.as_view(), name='follow-user'),
+    path('users/<int:user_id>/unfollow/', UnfollowUserView.as_view(), name='unfollow-user'),
 ]
