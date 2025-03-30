@@ -7,8 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Security settings
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'your-app-name.onrender.com').split(',')
+DEBUG = False  # Explicitly set to False for production
+DEBUG = os.getenv('DJANGO_DEBUG', 'False').lower() in ['true', '1']
+
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'socialmediaapi.onrender.com').split(',')
 
 # Installed apps
 INSTALLED_APPS = [
