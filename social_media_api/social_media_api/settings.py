@@ -115,3 +115,11 @@ REST_FRAMEWORK = {
 
 # Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL', 'postgres://postgres:password@localhost:5432/mysite'),
+        conn_max_age=600,
+        ssl_require=False  # Change to True if using SSL
+    )
+}
