@@ -60,14 +60,20 @@ TEMPLATES = [
         },
     },
 ]
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mysite',
+        'USER': 'postgres',
+        'PASSWORD': 'mutijose97!',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
 
 # WSGI
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
-# Database configuration
-DATABASES = {
-    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-}
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -116,10 +122,5 @@ REST_FRAMEWORK = {
 # Custom user model
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL', 'postgres://postgres:password@localhost:5432/mysite'),
-        conn_max_age=600,
-        ssl_require=False  # Change to True if using SSL
-    )
-}
+
+
