@@ -22,3 +22,8 @@ urlpatterns = [
     path('like/<int:pk>/', like_post, name='like-post'),
     path('unlike/<int:pk>/', unlike_post, name='unlike-post'),
 ]
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/accounts/', include('accounts.urls')),  # Include authentication-related routes
+    path('api/posts/', include('posts.urls')),  # Include post-related routes
+]
