@@ -5,15 +5,13 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+
 from .serializers import RegisterSerializer, UserSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
-from .serializers import RegisterSerializer, UserSerializer
 
-
-
+# Get the user model
 User = get_user_model()
-
 
 ### User Authentication Views
 
@@ -105,6 +103,14 @@ class LikePostView(APIView):
     def post(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         user = request.user
+
+        if post.likes.filter(id=user.id).exists():
+            return Response({"error": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
+        post.likes.add(user)
+        return Response({"message": "Post liked successfully."}, status=status.HTTP_200_OK)
+
+
 class UnlikePostView(APIView):
     """Unlike a post"""
     permission_classes = [permissions.IsAuthenticated]
@@ -118,4 +124,3 @@ class UnlikePostView(APIView):
 
         post.likes.remove(user)
         return Response({"message": "Post unliked successfully."}, status=status.HTTP_200_OK)
-      
