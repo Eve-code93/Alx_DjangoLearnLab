@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from rest_framework.generics import get_object_or_404
 from rest_framework import viewsets, generics, permissions, filters, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from notifications.models import Notification
-from rest_framework.generics import get_object_or_404
+
 
 
 
