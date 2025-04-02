@@ -1,16 +1,14 @@
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-
 from .serializers import RegisterSerializer, UserSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
 
-# Get the user model
+# Get the custom user model (CustomUser)
 User = get_user_model()
 
 ### User Authentication Views
@@ -49,30 +47,36 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
 ### Follow/Unfollow Views
 
-class FollowUserView(APIView):
+class FollowUserView(generics.GenericAPIView):
     """Follow another user"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):
+        # Retrieve the user to follow
         user_to_follow = get_object_or_404(User, id=user_id)
 
+        # Prevent following oneself
         if request.user == user_to_follow:
             return Response({"error": "You cannot follow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Add the user to the following list
         request.user.following.add(user_to_follow)
         return Response({"message": "You are now following this user."}, status=status.HTTP_200_OK)
 
 
-class UnfollowUserView(APIView):
+class UnfollowUserView(generics.GenericAPIView):
     """Unfollow a user"""
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):
+        # Retrieve the user to unfollow
         user_to_unfollow = get_object_or_404(User, id=user_id)
 
+        # Prevent unfollowing oneself
         if request.user == user_to_unfollow:
             return Response({"error": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Remove the user from the following list
         request.user.following.remove(user_to_unfollow)
         return Response({"message": "You have unfollowed this user."}, status=status.HTTP_200_OK)
 
