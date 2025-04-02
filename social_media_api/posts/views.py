@@ -15,6 +15,23 @@ def home(request):
 # ✅ Fetch the custom user model dynamically
 CustomUser = get_user_model()
 
+ Ensure the user must be authenticated
+class FeedView(APIView):
+    """Generate a feed of posts from users the current user follows"""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        # Get the users that the current user is following
+        following_users = request.user.following.all()
+
+        # Retrieve posts from users that the current user is following
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')
+
+        # Serialize the posts
+        serializer = PostSerializer(posts, many=True)
+
+        return Response(serializer.data)
 # ✅ Post ViewSet
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
