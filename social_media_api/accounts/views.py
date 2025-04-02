@@ -8,14 +8,14 @@ from .serializers import RegisterSerializer, UserSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
 
-# Get the custom user model (CustomUser)
-User = get_user_model()
+# Reference the custom user model
+CustomUser = get_user_model()
 
 ### User Authentication Views
 
 class RegisterView(generics.CreateAPIView):
     """User registration view"""
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  # Use CustomUser model
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
 
@@ -37,7 +37,7 @@ class LoginView(APIView):
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     """Retrieve and update user profile"""
-    queryset = User.objects.all()
+    queryset = CustomUser.objects.all()  # Use CustomUser model
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
@@ -52,8 +52,8 @@ class FollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):
-        # Retrieve the user to follow
-        user_to_follow = get_object_or_404(User, id=user_id)
+        # Retrieve the user to follow using CustomUser model
+        user_to_follow = get_object_or_404(CustomUser, id=user_id)
 
         # Prevent following oneself
         if request.user == user_to_follow:
@@ -69,8 +69,8 @@ class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):
-        # Retrieve the user to unfollow
-        user_to_unfollow = get_object_or_404(User, id=user_id)
+        # Retrieve the user to unfollow using CustomUser model
+        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
 
         # Prevent unfollowing oneself
         if request.user == user_to_unfollow:
