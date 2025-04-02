@@ -7,7 +7,11 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import RegisterSerializer, UserSerializer
 from posts.models import Post
 from posts.serializers import PostSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
+from .models import CustomUser  # Assuming your custom user model is named CustomUser
+from rest_framework.permissions import IsAuthenticated
 # Reference the custom user model
 CustomUser = get_user_model()
 

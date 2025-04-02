@@ -4,6 +4,8 @@ from .views import (
     FollowUserView, UnfollowUserView
 )
 
+from . import views  # Assuming your views are in the 'views.py' file within the same app
+
 urlpatterns = [
     path('posts/', PostListView.as_view(), name='post-list'),
     path('posts/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
@@ -17,4 +19,10 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('profile/', ProfileView.as_view(), name='profile'),
+]
+urlpatterns = [
+    # Other URL patterns...
+    
+    path('follow/<int:user_id>/', views.FollowUserView.as_view(), name='follow-user'),
+    path('unfollow/<int:user_id>/', views.UnfollowUserView.as_view(), name='unfollow-user'),
 ]
