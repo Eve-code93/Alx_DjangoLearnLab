@@ -2,8 +2,10 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 
+
+
 # Dynamically fetch the user model
-User = get_user_model()
+user = get_user_model().objects.create_user(**validated_data)
 
 class UserSerializer(serializers.ModelSerializer):
     followers_count = serializers.SerializerMethodField()
