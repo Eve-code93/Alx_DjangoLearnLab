@@ -9,9 +9,7 @@ from .models import Post, Comment, Like
 from .serializers import PostSerializer, CommentSerializer
 from notifications.models import Notification
 
-
-
-
+post = generics.get_object_or_404(Post, pk=pk)
 
 
 def home(request):
